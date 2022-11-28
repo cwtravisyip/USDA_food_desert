@@ -8,6 +8,7 @@ According to the USDA, food deserts are defined as:
 <p align="center">
 "Low access is characterized by at least 500 people and/or 33% of the tract population residing more than 1 mile from a supermarket or large grocery in urban areas, and more than 10 miles in rural areas.”
 <p align="center">
+ 
  ![food_desert_map](https://user-images.githubusercontent.com/78350303/204386909-db9b8e9c-5d2f-42f6-a7d2-b4d2fda218f4.png)
  
 
