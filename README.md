@@ -1,5 +1,5 @@
 # USDA Food Desert Analysis
-The repository contains all the jupyter notebook created for the import of data through open source.
+The repository contains all the jupyter notebook created for the import and exploration of data through open source.
 Data used for this project is publicly available. The data sets are imported to the working environment through the execution of the .ipynb with the prefix "import_". The census tract boundary data could be retreive here: https://www.census.gov/geographies/mapping-files/time-series/geo/carto-boundary-file.html.
 This is part of the data analysis process contributing to a group prentation for ECON3225 Big Data Economics. 
 
