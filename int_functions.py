@@ -1,3 +1,8 @@
+from sklearn.metrics import confusion_matrix
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
 # define function to generate custom color maps
 #define color map
 def hex_to_rgb(value):
@@ -41,10 +46,6 @@ def get_continuous_cmap(hex_list, float_list=None):
     return cmp
 
 # define function to return accuracy, specificity, sensitivity
-from sklearn.metrics import confusion_matrix
-import numpy as np
-import matplotlib.pyplot as plt
-import seaborn as sns
 def evaluation_score(y_test, y_pred_proba, thresh = 0.5):
     '''
     Compute the confusion matrix and return the accuracy, specificity and sensitivity score
@@ -73,3 +74,39 @@ def evaluation_score(y_test, y_pred_proba, thresh = 0.5):
     ax.set_ylabel("True Label")
     ax.set_xlabel("Predicted Label")
     return acc, spe,sen, cm
+
+
+def census_request(n = 57,query = "NAME",table = "",year = "2020"):
+    '''return a Pandas Dataframe of the given query over the state codes up to n.'''
+    # api request
+    df = []
+    api_request = ["https://api.census.gov/data/{year}/{table}?get={query}&for=tract:*&in=state:{:0>2d}&in=county:*".format(x,query = query,table = table,year = year) for x in range(1,n)]
+    for link in api_request:
+        try:   
+            r = requests.get(link)
+            response = r.json()
+            df.extend(response[1:])
+            print("retrieved {}".format(link.split(':')[3][0:2]))
+        except:
+            print("FAILED {}".format(link.split(':')[3][0:2]))
+
+    # extract column name
+    columns = response[0]
+
+    # contrust Pandas DataFrame
+    df = pd.DataFrame(df,columns = columns)
+    df.dropna(axis = 'columns',thresh = len(df.index), inplace = True)
+    
+    df['CensusTract'] = df['state'] + df['county'] + df['tract']  
+    df.drop(columns= ['state','county','tract'], inplace = True)
+
+    try:
+        df.drop(columns= ['GEO_ID'], inplace = True)
+    except:
+        pass
+    
+    df.replace("(X)",np.nan,inplace = True)
+    df.replace("-888888888",np.nan,inplace = True)
+    df.dropna(axis = "columns",inplace  = True)
+
+    return df
