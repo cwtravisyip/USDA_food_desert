@@ -2,6 +2,8 @@ from sklearn.metrics import confusion_matrix
 import numpy as np
 import matplotlib.pyplot as plt
 import seaborn as sns
+import requests
+import pandas as pd
 
 # define function to generate custom color maps
 #define color map
@@ -77,10 +79,11 @@ def evaluation_score(y_test, y_pred_proba, thresh = 0.5):
 
 
 def census_request(n = 57,query = "NAME",table = "",year = "2020"):
-    '''return a Pandas Dataframe of the given query over the state codes up to n.'''
+    '''return a Pandas Dataframe of the given query over the state codes up to n state fips code.'''
     # api request
     df = []
     api_request = ["https://api.census.gov/data/{year}/{table}?get={query}&for=tract:*&in=state:{:0>2d}&in=county:*".format(x,query = query,table = table,year = year) for x in range(1,n)]
+    print(f"Calling {len(api_request)} API requests")
     for link in api_request:
         try:   
             r = requests.get(link)
@@ -88,7 +91,7 @@ def census_request(n = 57,query = "NAME",table = "",year = "2020"):
             df.extend(response[1:])
             print("retrieved {}".format(link.split(':')[3][0:2]))
         except:
-            print("FAILED {}".format(link.split(':')[3][0:2]))
+            print("FAILED {}: {}".format(link.split(':')[3][0:2],link))
 
     # extract column name
     columns = response[0]
